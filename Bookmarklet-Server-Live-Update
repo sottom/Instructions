@@ -1,0 +1,11 @@
+Create a webserver that allows websites to access bookmarklet scripts without having to refresh the page. You can just save them in sublime or another editor and then the script in the bookmark will run and get them.
+(In cmder on windows)
+
+make a project
+use npm init
+npm install http-server --save-dev
+openssl req -newkey rsa:2048 -new -nodes -x509 -days 3650 -keyout key.pem -out cert.pem
+edit package.json to have this in scripts menu: "start": "node_modules/.bin/http-server.cmd -S -C cert.pem -o"
+call npm start to run http-server
+
+Bookmarklet looks like this: javascript:(function() { var JSFILE_LOCATION = 'https://localhost:8080/alert.js'; var h = document.createElement('script'); h.src = JSFILE_LOCATION; h.type = 'text/javascript'; document.body.appendChild(h); })();
