@@ -1,24 +1,93 @@
-//Google receiving from Github (google page)
+//paste this code in google, then in github when it opens
 
-// Create IE + others compatible event handler
-  var eventMethod = window.addEventListener ? "addEventListener" : "attachEvent";
-  var eventer = window[eventMethod];
-  var messageEvent = eventMethod == "attachEvent" ? "onmessage" : "message";
-  // Listen to message from child window
-  eventer(messageEvent,function(e) {
-    console.log('origin: ', e.origin)
-	  
-    // Check if origin is proper
-    if( e.origin !== 'https://github.com' ){ return }
-    console.log('parent received message!: ', e.data);
-  }, false);
-
-
-
-//***********************************************************************************************
+(function(){
   
-  
-  
-//Github sending to google (github page)
 
-window.opener.postMessage({token: 'baberam'}, 'https://www.google.com/');
+  //Google receiving from Github (google page)
+  switch(window.location.href){
+    
+
+    //Google
+    case "https://www.google.com/":
+      //open github window
+      window.open("https://github.com/");
+
+      // Create IE + others compatible event handler
+      var eventMethod = window.addEventListener ? "addEventListener" : "attachEvent";
+      var eventer = window[eventMethod];
+      var messageEvent = eventMethod == "attachEvent" ? "onmessage" : "message";
+
+      // Listen to message from child window
+      eventer(messageEvent,function(e) {
+
+        
+
+        // Check if origin is proper
+        if( e.origin !== 'https://github.com' ){ return }
+        console.log('parent received message!: ', e.data);
+        
+        // console.log('origin: ', e.origin)
+        // console.log('origin: ', e.source)
+        // console.log('origin: ', e.data)
+        // console.log(e);
+
+
+        //if data has keyword, send info
+        switch(e.data){
+          case "grab-page":
+            e.source.postMessage({code: "IXII"},
+                                 e.origin);
+            break;
+            
+        }
+
+      }, false);
+      
+      break;
+    
+
+    //Github
+    case "https://github.com/":
+      // Create IE + others compatible event handler
+      var eventMethod = window.addEventListener ? "addEventListener" : "attachEvent";
+      var eventer = window[eventMethod];
+      var messageEvent = eventMethod == "attachEvent" ? "onmessage" : "message";
+
+      // Listen to message from child window
+      eventer(messageEvent,function(e) {
+        if(e.data.code){
+          alert(e.data.code);
+        }
+        
+
+        // Check if origin is proper
+        if( e.origin !== 'https://www.google.com' ){ return }
+        console.log('parent received message!: ', e.data);
+        
+        // console.log('origin: ', e.origin)
+        // console.log('origin: ', e.source)
+        // console.log('origin: ', e.data)
+        // console.log(e);
+
+
+        //if data has keyword, send info
+        switch(e.data){
+          case "grab-page":
+            e.source.postMessage(document.querySelector("html"),
+                                 e.origin);
+            break;
+            
+        }
+
+      }, false);
+
+      window.opener.postMessage("grab-page", 'https://www.google.com/'); //post "grab-page" to google
+      
+      break;
+
+  }
+    
+
+    
+})()
+  
